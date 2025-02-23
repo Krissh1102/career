@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "651290502469",
+    "firebase_url": "https://career-5d13c-default-rtdb.firebaseio.com",
+    "project_id": "career-5d13c",
+    "storage_bucket": "career-5d13c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651290502469:android:e2132ecc08b22f2d5a0a2c",
+        "android_client_info": {
+          "package_name": "com.example.career"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6CepFEmjQ2J7ydOVK-qSKgeQB_1QSKuo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
