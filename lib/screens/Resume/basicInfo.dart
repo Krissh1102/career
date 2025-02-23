@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pdf/pdf.dart';
+import 'dart:html' as html;
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'dart:typed_data';
@@ -548,117 +549,119 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   }
 
   Future<void> _generateAndDownloadResume() async {
-  try {
-    final pdf = pw.Document();
+    try {
+      final pdf = pw.Document();
 
-    // Show a loading dialog
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
-    pdf.addPage(
-      pw.Page(
-        margin: const pw.EdgeInsets.all(40),
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Header(
-                level: 0,
-                child: pw.Text(
-                  _nameController.text,
-                  style: pw.TextStyle(
-                    fontSize: 24,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.Text(
-                'Email: ${_emailController.text} | Phone: ${_phoneController.text}',
-                style: const pw.TextStyle(fontSize: 14),
-              ),
-              pw.Divider(),
-              pw.SizedBox(height: 20),
-              // Professional Summary
-              pw.Header(
-                level: 1,
-                child: pw.Text('Professional Summary'),
-              ),
-              pw.Text(_summaryController.text),
-              pw.SizedBox(height: 20),
-              // Education
-              pw.Header(
-                level: 1,
-                child: pw.Text('Education'),
-              ),
-              pw.Text('${_schoolController.text} - ${_degreeController.text}'),
-              pw.Text('Year: ${_yearController.text}'),
-              pw.Text('GPA: ${_gpaController.text}'),
-              pw.SizedBox(height: 20),
-              // Experience
-              pw.Header(
-                level: 1,
-                child: pw.Text('Work Experience'),
-              ),
-              pw.Text('${_positionController.text} at ${_companyController.text}'),
-              pw.Text('Duration: ${_durationController.text}'),
-              pw.SizedBox(height: 10),
-              ...(_responsibilities.map((resp) => pw.Text('• $resp'))),
-              pw.SizedBox(height: 20),
-              // Skills
-              pw.Header(
-                level: 1,
-                child: pw.Text('Skills'),
-              ),
-              pw.Text(_skills.join(', ')),
-            ],
-          );
-        },
-      ),
-    );
-
-    // For web platform
-    final bytes = await pdf.save();
-    final blob = html.Blob([bytes], 'application/pdf');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    html.window.open(url, '_blank');
-    html.Url.revokeObjectUrl(url);
-
-    // Hide loading dialog
-    Navigator.of(context).pop();
-  } catch (e) {
-    // Hide loading dialog if showing
-    if (context.mounted) {
-      Navigator.of(context).pop();
-    }
-    
-    // Show error dialog
-    if (context.mounted) {
+      // Show a loading dialog
       showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to generate PDF: ${e.toString()}'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         },
       );
+
+      pdf.addPage(
+        pw.Page(
+          margin: const pw.EdgeInsets.all(40),
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Header(
+                  level: 0,
+                  child: pw.Text(
+                    _nameController.text,
+                    style: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text(
+                  'Email: ${_emailController.text} | Phone: ${_phoneController.text}',
+                  style: const pw.TextStyle(fontSize: 14),
+                ),
+                pw.Divider(),
+                pw.SizedBox(height: 20),
+                // Professional Summary
+                pw.Header(
+                  level: 1,
+                  child: pw.Text('Professional Summary'),
+                ),
+                pw.Text(_summaryController.text),
+                pw.SizedBox(height: 20),
+                // Education
+                pw.Header(
+                  level: 1,
+                  child: pw.Text('Education'),
+                ),
+                pw.Text(
+                    '${_schoolController.text} - ${_degreeController.text}'),
+                pw.Text('Year: ${_yearController.text}'),
+                pw.Text('GPA: ${_gpaController.text}'),
+                pw.SizedBox(height: 20),
+                // Experience
+                pw.Header(
+                  level: 1,
+                  child: pw.Text('Work Experience'),
+                ),
+                pw.Text(
+                    '${_positionController.text} at ${_companyController.text}'),
+                pw.Text('Duration: ${_durationController.text}'),
+                pw.SizedBox(height: 10),
+                ...(_responsibilities.map((resp) => pw.Text('• $resp'))),
+                pw.SizedBox(height: 20),
+                // Skills
+                pw.Header(
+                  level: 1,
+                  child: pw.Text('Skills'),
+                ),
+                pw.Text(_skills.join(', ')),
+              ],
+            );
+          },
+        ),
+      );
+
+      // For web platform
+      final bytes = await pdf.save();
+      final blob = html.Blob([bytes], 'application/pdf');
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      html.window.open(url, '_blank');
+      html.Url.revokeObjectUrl(url);
+
+      // Hide loading dialog
+      Navigator.of(context).pop();
+    } catch (e) {
+      // Hide loading dialog if showing
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show error dialog
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: Text('Failed to generate PDF: ${e.toString()}'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
-}
 
   pw.Widget _buildPdfSection(
     String title,
